@@ -6,3 +6,5 @@
 target/
 .project
 access.log
+accesslog_report.html
+app.log
