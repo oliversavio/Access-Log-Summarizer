@@ -8,3 +8,4 @@ target/
 access.log
 accesslog_report.html
 app.log
+bin/

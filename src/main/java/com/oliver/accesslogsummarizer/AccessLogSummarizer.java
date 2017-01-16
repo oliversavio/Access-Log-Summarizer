@@ -39,9 +39,6 @@ public class AccessLogSummarizer {
 	}
 	
 	
-
-	
-	
 	
 public static void main(String[] args) {
 		
