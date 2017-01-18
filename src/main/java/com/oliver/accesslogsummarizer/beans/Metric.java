@@ -14,6 +14,11 @@ public class Metric {
 		this.url = url;
 		add(time);
 	}
+	
+	public Metric(String url) {
+		this.url = url;
+		add();
+	}
 
 	public long getCount() {
 		return this.count;
@@ -40,6 +45,10 @@ public class Metric {
 		digest.add(time);
 		totaTime += time;
 		avg = totaTime / count;
+	}
+	
+	public void add() {
+		count++;
 	}
 
 }

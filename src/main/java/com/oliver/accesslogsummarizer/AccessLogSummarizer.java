@@ -11,19 +11,20 @@ import org.apache.logging.log4j.Logger;
 
 import com.oliver.accesslogsummarizer.beans.Metric;
 import com.oliver.accesslogsummarizer.beans.ParsingOptions;
+import com.oliver.accesslogsummarizer.helper.ArgumentParserHelper;
 
 public class AccessLogSummarizer {
 
 	private static final Logger logger = LogManager.getLogger(AccessLogSummarizer.class);
 
-	public void processAccessLog(String fileName, int urlIndx, int timeIndx) {
+	public void processAccessLog(ParsingOptions options) {
 		AccessLogParser parser = new SimpleLogParser();
 		Map<String, Metric> metricMap = null;
 		logger.info("Processing..");
 		long s1 = System.currentTimeMillis();
 		
-		try(Stream<String> stream = Files.lines(Paths.get(fileName))) {
-			metricMap = parser.parseLog(stream, new ParsingOptions(urlIndx, timeIndx));
+		try(Stream<String> stream = Files.lines(Paths.get(options.getFileName()))) {
+			metricMap = parser.parseLog(stream, options);
 		} catch (IOException e) {
 			logger.error("Problem Streaming File: ", e);
 			return;
@@ -46,12 +47,10 @@ public static void main(String[] args) {
 			throw new IllegalArgumentException("Not Enough Arguments Passed to the method");
 		}
 		
-		String fileName = args[0];
-		int urlIndex = Integer.parseInt(args[1]);
-		int timeIndex = Integer.parseInt(args[2]);
+		ParsingOptions options = ArgumentParserHelper.getInstance().parseArguments(args);
 		
 		AccessLogSummarizer r = new AccessLogSummarizer();
-		r.processAccessLog(fileName, urlIndex, timeIndex);
+		r.processAccessLog(options);
 	
 	}
 	
