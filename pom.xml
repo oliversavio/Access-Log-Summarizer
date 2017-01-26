@@ -9,6 +9,14 @@
 
 	<name>accesslogsummarizer</name>
 	<url>http://maven.apache.org</url>
+	<contributors>
+		<contributor>
+			<name>Oliver Mascarenhas</name>
+			<email>oliver.savio@gmail.com</email>
+			<url>http://oliversavio.github.io/</url>
+		</contributor>
+	</contributors>
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
