@@ -31,7 +31,7 @@ public class DefaultHtmlOutputResultProcessor implements ResultProcessor {
 
 		List<Metric> filetredMetrics = filterMapValues(metriMap);
 
-		//Sort URLs as descending order of count
+		//Sort URLs by descending order of count
 		Comparator<Metric> comparator = Comparator.comparingLong(Metric::getCount);
 		Collections.sort(filetredMetrics, comparator.reversed());
 
@@ -48,8 +48,8 @@ public class DefaultHtmlOutputResultProcessor implements ResultProcessor {
 	 */
 	private List<Metric> filterMapValues(Map<String, Metric> map) {
 		List<Metric> filteredMetrics = map.entrySet().stream()
-				.filter(mapp -> mapp.getValue().getCount() > URL_COUNT_THRESHOLD)
-				.map(mapped -> mapped.getValue())
+				.filter(mapItem -> mapItem.getValue().getCount() > URL_COUNT_THRESHOLD)
+				.map(mapItem -> mapItem.getValue())
 				.collect(Collectors.toList());
 		return filteredMetrics;
 	}
