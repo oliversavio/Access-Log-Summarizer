@@ -73,10 +73,10 @@ public class DefaultHtmlOutputResultProcessor implements ResultProcessor {
 			sb.append(metric.getCount());
 			sb.append("</td>");
 			sb.append("<td>");
-			sb.append(decimalFormat.format(metric.getAvg() / 1000));
+			sb.append(decimalFormat.format(metric.getAvg()));
 			sb.append("</td>");
 			sb.append("<td>");
-			sb.append(decimalFormat.format(metric.getDigest().quantile(0.95) / 1000));
+			sb.append(decimalFormat.format(metric.getDigest().quantile(0.95)));
 			sb.append("</td>");
 			sb.append("</tr>");
 		});

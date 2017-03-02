@@ -6,8 +6,9 @@ public class ParsingOptions {
 	private int urlIndex;
 	private int timeTakenIndex;
 	private boolean containsTimeValue = false;
+	private int timeFactor;
 
-	public ParsingOptions(String url, int urlIndex, int timeTakenIndex) {
+	public ParsingOptions(String url, int urlIndex, int timeTakenIndex, int timeFactor) {
 		super();
 		this.fileName = url;
 		this.urlIndex = urlIndex;
@@ -15,6 +16,7 @@ public class ParsingOptions {
 		if (timeTakenIndex >= 0) {
 			this.containsTimeValue = true;
 		}
+		this.timeFactor = timeFactor;
 	}
 
 	public int getUrlIndex() {
@@ -33,4 +35,8 @@ public class ParsingOptions {
 		return containsTimeValue;
 	}
 
+	public int getTimeFactor() {
+		return timeFactor;
+	}
+	
 }

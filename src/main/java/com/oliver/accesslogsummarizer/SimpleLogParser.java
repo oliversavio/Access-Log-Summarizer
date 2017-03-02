@@ -1,5 +1,6 @@
 package com.oliver.accesslogsummarizer;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -45,7 +46,10 @@ public class SimpleLogParser implements AccessLogParser {
 		}
 
 		if (options.getUrlIndex() >= arr.length || options.getTimeTakenIndex() >= arr.length) {
-			logger.error("URL and Time Index Specified are incorrect for array:  " + arr);
+			logger.error("URL and Time Index Specified are incorrect for array, skipping record!");
+			if(logger.isDebugEnabled()) {
+				logger.debug("Skipped record Details:{} ", Arrays.toString(arr));
+			}
 			return;
 		}
 
@@ -54,7 +58,7 @@ public class SimpleLogParser implements AccessLogParser {
 
 		if (options.isContainsTimeValue()) {
 			try {
-				valueTime = Long.parseLong(arr[options.getTimeTakenIndex()]);
+				valueTime = Long.parseLong(arr[options.getTimeTakenIndex()])/options.getTimeFactor();
 			} catch (NumberFormatException ex) {
 				logger.error("couldnt parse time value, skipping record.", ex);
 				return;

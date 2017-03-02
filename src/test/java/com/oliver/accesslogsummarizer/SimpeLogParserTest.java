@@ -27,37 +27,39 @@ public class SimpeLogParserTest {
 	@Test
 	public void testParser() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9));
+		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1));
 		assertEquals(5, map.size());
 	}
 	
 	@Test
 	public void testIncorrectParseOptions() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null,6, 7));
+		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null,6, 7, 1));
 		assertEquals(0, map.size());
 	}
 	
 	@Test
 	public void testIndexOutOfRange() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 10));
+		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 10, 1));
 		assertEquals(0, map.size());
 	}
 	
 	@Test
 	public void testParserAvg() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9));
+		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1));
 		assertEquals(3985.0, map.get("/shuttle/countdown/").getAvg(), 0.01);
 	}
 	
 	@Test
 	public void testParserTotal() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9));
+		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1));
 		assertEquals(4179, map.get("/shuttle/missions/sts-73/sts-73-patch-small.gif").getTotaTime(), 0.01);
 	}
+	
+	
 	
 	
 }

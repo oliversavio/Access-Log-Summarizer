@@ -1,6 +1,7 @@
 package com.oliver.accesslogsummarizer;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -11,7 +12,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.oliver.accesslogsummarizer.beans.Metric;
 import com.oliver.accesslogsummarizer.beans.ParsingOptions;
-import com.oliver.accesslogsummarizer.helper.ArgumentParserHelper;
+import com.oliver.accesslogsummarizer.helper.CommandLineArgumentParser;
+import com.oliver.accesslogsummarizer.reports.DefaultReportWriter;
+import com.oliver.accesslogsummarizer.reports.ReportProcessor;
 
 public class AccessLogSummarizer {
 
@@ -23,15 +26,15 @@ public class AccessLogSummarizer {
 		logger.info("Processing..");
 		long s1 = System.currentTimeMillis();
 		
-		try(Stream<String> stream = Files.lines(Paths.get(options.getFileName()))) {
+		try(Stream<String> stream = Files.lines(Paths.get(options.getFileName()), Charset.forName("Cp1252"))) {
 			metricMap = parser.parseLog(stream, options);
 		} catch (IOException e) {
 			logger.error("Problem Streaming File: ", e);
 			return;
 		}
 		
-		ResultProcessor resultProcessor = new DefaultHtmlOutputResultProcessor();
-		resultProcessor.processResults(metricMap);
+		ReportProcessor report = new ReportProcessor(new DefaultReportWriter());
+		report.generateReport(metricMap);
 		
 		long e1 = System.currentTimeMillis();
 		
@@ -47,7 +50,7 @@ public static void main(String[] args) {
 			throw new IllegalArgumentException("Not Enough Arguments Passed to the method");
 		}
 		
-		ParsingOptions options = ArgumentParserHelper.getInstance().parseArguments(args);
+		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
 		
 		AccessLogSummarizer r = new AccessLogSummarizer();
 		r.processAccessLog(options);

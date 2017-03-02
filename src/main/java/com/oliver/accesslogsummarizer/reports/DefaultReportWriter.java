@@ -1,0 +1,38 @@
+package com.oliver.accesslogsummarizer.reports;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.oliver.accesslogsummarizer.beans.Metric;
+
+/**
+ * Default Report, displayes all URLs with count > 100. Report is sorted by
+ * descending order of URL count
+ * 
+ * @author olivermascarenhas
+ *
+ */
+public class DefaultReportWriter extends ReportWriter {
+
+	@Override
+	public void generateReport(Map<String, Metric> metriMap) {
+
+		List<Metric> metrics = metriMap.entrySet().stream()
+				.filter(mapItem -> mapItem.getValue().getCount() > 100)
+				.map(mapItem -> mapItem.getValue())
+				.collect(Collectors.toList());
+
+		// Sort URLs by descending order of count
+		Comparator<Metric> comparator = Comparator.comparingLong(Metric::getCount);
+		Collections.sort(metrics, comparator.reversed());
+
+		StringBuilder sb = createTable(metrics);
+
+		String report = appendHeaderAndFooter(sb.toString());
+		writeToFile(report,"DefaultReport.html");
+	}
+
+}
