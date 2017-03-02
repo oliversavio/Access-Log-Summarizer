@@ -59,7 +59,12 @@ public class SimpeLogParserTest {
 		assertEquals(4179, map.get("/shuttle/missions/sts-73/sts-73-patch-small.gif").getTotaTime(), 0.01);
 	}
 	
-	
+	@Test
+	public void testParserAvgMilli() {
+		AccessLogParser parser =  new SimpleLogParser();
+		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1000));
+		assertEquals(3.985, map.get("/shuttle/countdown/").getAvg(), 0.01);
+	}
 	
 	
 }

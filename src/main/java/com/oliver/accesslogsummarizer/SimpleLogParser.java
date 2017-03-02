@@ -58,7 +58,7 @@ public class SimpleLogParser implements AccessLogParser {
 
 		if (options.isContainsTimeValue()) {
 			try {
-				valueTime = Long.parseLong(arr[options.getTimeTakenIndex()])/options.getTimeFactor();
+				valueTime = Long.parseLong(arr[options.getTimeTakenIndex()]);
 			} catch (NumberFormatException ex) {
 				logger.error("couldnt parse time value, skipping record.", ex);
 				return;
@@ -69,7 +69,7 @@ public class SimpleLogParser implements AccessLogParser {
 
 		if (metric == null) {
 			if (options.isContainsTimeValue()) {
-				metric = new Metric(keyUrl, valueTime);
+				metric = new Metric(keyUrl, valueTime, options.getTimeFactor());
 			} else {
 				metric = new Metric(keyUrl);
 			}

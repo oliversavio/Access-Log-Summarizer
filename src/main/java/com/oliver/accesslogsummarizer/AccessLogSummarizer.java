@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import com.oliver.accesslogsummarizer.beans.Metric;
 import com.oliver.accesslogsummarizer.beans.ParsingOptions;
 import com.oliver.accesslogsummarizer.helper.CommandLineArgumentParser;
-import com.oliver.accesslogsummarizer.reports.DefaultReportWriter;
+import com.oliver.accesslogsummarizer.reports.QuickSummaryReportWriter;
 import com.oliver.accesslogsummarizer.reports.ReportProcessor;
 
 public class AccessLogSummarizer {
@@ -33,7 +33,8 @@ public class AccessLogSummarizer {
 			return;
 		}
 		
-		ReportProcessor report = new ReportProcessor(new DefaultReportWriter());
+		//ReportProcessor report = new ReportProcessor(new DefaultReportWriter());
+		ReportProcessor report = new ReportProcessor(new QuickSummaryReportWriter());
 		report.generateReport(metricMap);
 		
 		long e1 = System.currentTimeMillis();
@@ -46,7 +47,7 @@ public class AccessLogSummarizer {
 	
 public static void main(String[] args) {
 		
-		if(args.length < 3) {
+		if(args.length < 4) {
 			throw new IllegalArgumentException("Not Enough Arguments Passed to the method");
 		}
 		

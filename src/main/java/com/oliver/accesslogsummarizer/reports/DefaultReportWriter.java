@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import com.oliver.accesslogsummarizer.beans.Metric;
 
 /**
- * Default Report, displayes all URLs with count > 100. Report is sorted by
+ * Default Report, displays all URLs with count > 100. Report is sorted by
  * descending order of URL count
  * 
  * @author olivermascarenhas
@@ -29,10 +29,13 @@ public class DefaultReportWriter extends ReportWriter {
 		Comparator<Metric> comparator = Comparator.comparingLong(Metric::getCount);
 		Collections.sort(metrics, comparator.reversed());
 
-		StringBuilder sb = createTable(metrics);
-
-		String report = appendHeaderAndFooter(sb.toString());
-		writeToFile(report,"DefaultReport.html");
+		HtmlTableBuilder table = new HtmlTableBuilder()
+								 .caption("Default Report")
+								 .header(new String[]{"URL","COUNT","AVG","95th %tile"})	
+								 .body(metrics);
+		
+		String report = table.toString();
+		writeToFile(report,"DefaultReport1.html");
 	}
 
 }
