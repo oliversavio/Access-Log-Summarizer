@@ -12,9 +12,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.oliver.accesslogsummarizer.beans.Metric;
 import com.oliver.accesslogsummarizer.beans.ParsingOptions;
+import com.oliver.accesslogsummarizer.beans.ParsingOptions.ReportType;
+import com.oliver.accesslogsummarizer.beans.ReportContext;
 import com.oliver.accesslogsummarizer.helper.CommandLineArgumentParser;
+import com.oliver.accesslogsummarizer.reports.DefaultReportWriter;
 import com.oliver.accesslogsummarizer.reports.QuickSummaryReportWriter;
 import com.oliver.accesslogsummarizer.reports.ReportProcessor;
+import com.oliver.accesslogsummarizer.reports.ReportWriter;
 
 public class AccessLogSummarizer {
 
@@ -33,15 +37,35 @@ public class AccessLogSummarizer {
 			return;
 		}
 		
-		//ReportProcessor report = new ReportProcessor(new DefaultReportWriter());
-		ReportProcessor report = new ReportProcessor(new QuickSummaryReportWriter());
-		report.generateReport(metricMap);
+		ReportContext context = new ReportContext();
+		context.setMetricMap(metricMap);
+		context.setTimeFactor(options.getTimeFactor());
+		context.setContainsTimeParam(options.isContainsTimeValue());
+		
+		ReportProcessor report = new ReportProcessor(getReportWriterStrategy(options.getReportType()));
+		report.generateReport(context);
 		
 		long e1 = System.currentTimeMillis();
 		
 		logger.info("Done!");
 		logger.info("Processing Time(s): " + (e1-s1)/1000d);
 	}
+	
+	
+	private ReportWriter getReportWriterStrategy(ReportType reportType) {
+		
+		if(reportType == null) {
+			return new DefaultReportWriter();
+		}
+		
+		switch(reportType) {
+			case QUICK_SUMMARY : return new QuickSummaryReportWriter();
+			case DEFAULT : 
+			default : return new DefaultReportWriter();
+		}
+		
+	}
+	
 	
 	
 	

@@ -37,7 +37,7 @@ public class HtmlTableBuilder {
 			return this;
 	}
 	
-	public HtmlTableBuilder body(List<Metric> metrics) {
+	public HtmlTableBuilder body(List<Metric> metrics, int timeFactor, boolean containsTimeParam) {
 		StringBuilder sb = new StringBuilder();
 		metrics.forEach(metric -> {
 			sb.append("<tr>");
@@ -48,11 +48,19 @@ public class HtmlTableBuilder {
 			sb.append(metric.getCount());
 			sb.append("</td>");
 			sb.append("<td>");
-			sb.append(decimalFormat.format(metric.getAvg()));
-			sb.append("</td>");
-			sb.append("<td>");
-			sb.append(decimalFormat.format(metric.getDigest().quantile(0.95)));
-			sb.append("</td>");
+			if(containsTimeParam) {
+				sb.append(decimalFormat.format((double) metric.getAvg()/timeFactor));
+				sb.append("</td>");
+				sb.append("<td>");
+				sb.append(decimalFormat.format((double) metric.get95Percentile()/timeFactor));
+				sb.append("</td>");
+			} else {
+				sb.append("NA");
+				sb.append("</td>");
+				sb.append("<td>");
+				sb.append("NA");
+				sb.append("</td>");
+			}
 			sb.append("</tr>");
 		});
 		
@@ -60,6 +68,8 @@ public class HtmlTableBuilder {
 		
 		return this;
 	}
+	
+	
 	
 	
 	@Override

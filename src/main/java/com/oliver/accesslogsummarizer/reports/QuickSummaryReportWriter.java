@@ -8,16 +8,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.oliver.accesslogsummarizer.beans.Metric;
+import com.oliver.accesslogsummarizer.beans.ReportContext;
 
 public class QuickSummaryReportWriter extends ReportWriter {
 
 	@Override
-	public void generateReport(Map<String, Metric> metriMap) {
+	public void generateReport(ReportContext context) {
 		
 		StringBuilder sb = new StringBuilder();
-		
+		Map<String, Metric> metriMap = context.getMetricMap();
 		List<Metric> metrics = metriMap.entrySet().stream()
-				.filter(mapItem -> mapItem.getValue().getCount() > 100)
+				//.filter(mapItem -> mapItem.getValue().getCount() > 100)
 				.map(mapItem -> mapItem.getValue())
 				.collect(Collectors.toList());
 		
@@ -31,7 +32,7 @@ public class QuickSummaryReportWriter extends ReportWriter {
 		HtmlTableBuilder table = new HtmlTableBuilder()
 				 .caption("Top URL by Count")
 				 .header(new String[]{"URL","COUNT","AVG","95th %tile"})	
-				 .body(getTop20List(metrics, topTwenty));
+				 .body(getTop20List(metrics, topTwenty), context.getTimeFactor(), context.isContainsTimeParam());
 		
 		sb.append(table.toString());
 		
@@ -42,7 +43,7 @@ public class QuickSummaryReportWriter extends ReportWriter {
 		HtmlTableBuilder table2 = new HtmlTableBuilder()
 				 .caption("Top 95 %tile by Response Time")
 				 .header(new String[]{"URL","COUNT","AVG","95th %tile"})	
-				 .body(getTop20List(metrics, topTwenty));
+				 .body(getTop20List(metrics, topTwenty), context.getTimeFactor(), context.isContainsTimeParam());
 		
 		
 		sb.append(table2.toString());

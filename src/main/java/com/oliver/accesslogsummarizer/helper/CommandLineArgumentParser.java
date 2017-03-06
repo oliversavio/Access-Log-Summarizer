@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.oliver.accesslogsummarizer.beans.ParsingOptions;
+import com.oliver.accesslogsummarizer.beans.ParsingOptions.ReportType;
 
 public class CommandLineArgumentParser {
 
@@ -25,58 +26,68 @@ public class CommandLineArgumentParser {
 	}
 
 	public ParsingOptions parseArguments(String[] args) {
-		ParsingOptions options = null;
-		String fileName = null;
-		int urlIndex = -1, timeIndex = -1, timeFactor = 1;
+		ParsingOptions options = new ParsingOptions();
+		options.setTimeFactor(1);
+		options.setReportType(ReportType.DEFAULT);
+		
+		
 		if (args == null || args.length < 4) {
 			throw new IllegalArgumentException("Program expects at least 2 arguments.");
 		}
 
 		for(int i = 0 ; i < args.length ;) {
 			String argKey = args[i];
-			String argVal;
 			
 			switch(argKey) {
 				case "-f" :
-					argVal = args[i+1];
-					fileName = argVal;
-					logger.debug("File Name: " + argVal);
+					options.setFileName(args[i+1]);
+					logger.debug("File Name: " + args[i+1]);
 					i = i + 2;
 					break;
+			
 				case "-ui" :
-					argVal = args[i+1];
-					urlIndex = parseIntegerArgument(argVal, "Couldn't parse URL index value");
-					logger.debug("URL Index: " + argVal);
+					options.setUrlIndex(parseIntegerArgument(args[i+1], "Couldn't parse URL index value") - 1);
+					logger.debug("URL Index: " + args[i+1]);
 					i = i + 2;
 					break;
+				
 				case "-ti" :
-					argVal = args[i+1];
-					timeIndex = parseIntegerArgument(argVal, "Couldn't parse Time index value");
-					logger.debug("Time Name: " + argVal);
+					options.setTimeTakenIndex(parseIntegerArgument(args[i+1], "Couldn't parse Time index value") - 1);
+					options.setContainsTimeValue(true);
+					logger.debug("Time Name: " + args[i+1]);
 					i = i + 2;
 					break;
+			
 				case "-m" :
-					argVal = args[i];
-					timeFactor = 1000000;
-					logger.debug("Time factor micro: " + argVal);
+					options.setTimeFactor(1000_000);
+					logger.debug("Time factor micro: " + 1000_000);
 					i = i + 1;
 					break;
 				
 				case "-M" :
-					argVal = args[i];
-					timeFactor = 1000;
-					logger.debug("Time factor milli: " + argVal);
+					options.setTimeFactor(1000);
+					logger.debug("Time factor milli: " + 1000);
 					i = i + 1;
 					break;	
 				
+				case "-Q" :
+					options.setReportType(ReportType.QUICK_SUMMARY);
+					logger.debug("ReportType: " + ReportType.QUICK_SUMMARY);
+					i = i + 1;
+					break;
+					
+				case "-D" :
+					options.setReportType(ReportType.DEFAULT);
+					logger.debug("ReportType: " + ReportType.DEFAULT);
+					i = i + 1;
+					break;
+					
 				default:
 						logger.debug("Invalid Arguments passed: " + argKey);
 			}
 			
 		}
 		
-		options = new ParsingOptions(fileName, urlIndex, timeIndex, timeFactor);
-
 		return options;
 	}
 

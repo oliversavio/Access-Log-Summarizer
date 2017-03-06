@@ -6,14 +6,11 @@ public class Metric {
 	private String url;
 	private long count;
 	private double totaTime;
-	private double avg;
 	private TDigest digest;
-	private double timefactor;
-
+	
 	public Metric(String url, long time, double timefactor) {
 		digest = TDigest.createDigest(100.0);
 		this.url = url;
-		this.timefactor = timefactor;
 		add(time);
 	}
 
@@ -41,19 +38,14 @@ public class Metric {
 	}
 
 	public double getAvg() {
-		return avg;
-	}
-
-	public TDigest getDigest() {
-		return digest;
+		return totaTime / count;
 	}
 
 	public void add(long time) {
 		count++;
-		double temp = (double) time / this.timefactor;
-		digest.add(temp);
-		totaTime += temp;
-		avg = totaTime / count;
+		digest.add(time);
+		totaTime += time;
+		//avg = totaTime / count;
 	}
 
 	

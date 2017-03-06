@@ -1,8 +1,6 @@
 package com.oliver.accesslogsummarizer.reports;
 
-import java.util.Map;
-
-import com.oliver.accesslogsummarizer.beans.Metric;
+import com.oliver.accesslogsummarizer.beans.ReportContext;
 
 public class ReportProcessor {
 
@@ -13,8 +11,8 @@ public class ReportProcessor {
 		this.writer = writer;
 	}
 	
-	public void generateReport(Map<String, Metric> metriMap) {
-		writer.generateReport(metriMap);
+	public void generateReport(ReportContext context) {
+		writer.generateReport(context);
 	}
 	
 	

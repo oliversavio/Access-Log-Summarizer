@@ -41,12 +41,12 @@ public class SimpleLogParser implements AccessLogParser {
 	 */
 	private void process(Map<String, Metric> map, String[] arr, ParsingOptions options) {
 		if (arr == null) {
-			logger.error("String split value is null");
+			logger.debug("String split value is null");
 			return;
 		}
 
 		if (options.getUrlIndex() >= arr.length || options.getTimeTakenIndex() >= arr.length) {
-			logger.error("URL and Time Index Specified are incorrect for array, skipping record!");
+			logger.debug("URL and Time Index Specified are incorrect for array, skipping record!");
 			if(logger.isDebugEnabled()) {
 				logger.debug("Skipped record Details:{} ", Arrays.toString(arr));
 			}
@@ -60,7 +60,7 @@ public class SimpleLogParser implements AccessLogParser {
 			try {
 				valueTime = Long.parseLong(arr[options.getTimeTakenIndex()]);
 			} catch (NumberFormatException ex) {
-				logger.error("couldnt parse time value, skipping record.", ex);
+				logger.debug("couldnt parse time value, skipping record.", ex);
 				return;
 			}
 		}

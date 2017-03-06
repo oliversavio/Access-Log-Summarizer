@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.oliver.accesslogsummarizer.beans.Metric;
+import com.oliver.accesslogsummarizer.beans.ReportContext;
 
 /**
  * Default Report, displays all URLs with count > 100. Report is sorted by
@@ -18,8 +19,9 @@ import com.oliver.accesslogsummarizer.beans.Metric;
 public class DefaultReportWriter extends ReportWriter {
 
 	@Override
-	public void generateReport(Map<String, Metric> metriMap) {
+	public void generateReport(ReportContext context) {
 
+		Map<String, Metric> metriMap  = context.getMetricMap();
 		List<Metric> metrics = metriMap.entrySet().stream()
 				.filter(mapItem -> mapItem.getValue().getCount() > 100)
 				.map(mapItem -> mapItem.getValue())
@@ -32,7 +34,7 @@ public class DefaultReportWriter extends ReportWriter {
 		HtmlTableBuilder table = new HtmlTableBuilder()
 								 .caption("Default Report")
 								 .header(new String[]{"URL","COUNT","AVG","95th %tile"})	
-								 .body(metrics);
+								 .body(metrics, context.getTimeFactor(), context.isContainsTimeParam());
 		
 		String report = table.toString();
 		writeToFile(report,"DefaultReport1.html");

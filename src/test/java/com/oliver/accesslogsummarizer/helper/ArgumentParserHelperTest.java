@@ -10,33 +10,33 @@ public class ArgumentParserHelperTest {
 	@Test
 	public void testParseOptionWithTimeIndex() {
 
-		String[] args = new String[] { "-f","fileName", "-ui", "0", "-ti", "1" };
+		String[] args = new String[] { "-f","fileName", "-ui", "1", "-ti", "2" };
 
 		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
-		assertEquals(options.getFileName(), "fileName");
-		assertEquals(options.getUrlIndex(), 0);
-		assertEquals(options.getTimeTakenIndex(), 1);
+		assertEquals("fileName", options.getFileName());
+		assertEquals(0, options.getUrlIndex());
+		assertEquals(1, options.getTimeTakenIndex());
 	}
 
 	@Test
 	public void testParseOptionWithoutTimeIndex() {
 
-		String[] args = new String[] { "-f","fileName", "-ui", "0" };
+		String[] args = new String[] { "-f","fileName", "-ui", "1" };
 
 		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
-		assertEquals(options.getFileName(), "fileName");
-		assertEquals(options.getUrlIndex(), 0);
+		assertEquals("fileName", options.getFileName());
+		assertEquals(0, options.getUrlIndex());
 		assertFalse(options.isContainsTimeValue());
 	}
 	
 	@Test
 	public void testRandomOrder() {
 
-		String[] args = new String[] { "-ui", "0", "-f","fileName" };
+		String[] args = new String[] { "-ui", "1", "-f","fileName" };
 
 		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
-		assertEquals(options.getFileName(), "fileName");
-		assertEquals(options.getUrlIndex(), 0);
+		assertEquals("fileName", options.getFileName());
+		assertEquals(0, options.getUrlIndex());
 		assertFalse(options.isContainsTimeValue());
 	}
 
@@ -60,7 +60,7 @@ public class ArgumentParserHelperTest {
 
 	@Test
 	public void testTimeFactorMilli() {
-		String[] args = new String[] { "-ui", "0", "-f","fileName","-M" };
+		String[] args = new String[] { "-ui", "1", "-f","fileName","-M" };
 
 		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
 		assertEquals(options.getFileName(), "fileName");
@@ -71,7 +71,7 @@ public class ArgumentParserHelperTest {
 	
 	@Test
 	public void testTimeFactorMicro() {
-		String[] args = new String[] { "-m","-ui", "0", "-f","fileName" };
+		String[] args = new String[] { "-m","-ui", "1", "-f","fileName" };
 
 		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
 		assertEquals(options.getFileName(), "fileName");
@@ -82,18 +82,18 @@ public class ArgumentParserHelperTest {
 	
 	@Test
 	public void testTimeFactorDefault() {
-		String[] args = new String[] { "-ui", "0", "-f","fileName"};
+		String[] args = new String[] { "-ui", "1", "-f","fileName"};
 
 		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
-		assertEquals(options.getFileName(), "fileName");
-		assertEquals(options.getUrlIndex(), 0);
+		assertEquals("fileName", options.getFileName());
+		assertEquals(0, options.getUrlIndex());
 		assertFalse(options.isContainsTimeValue());
 		assertEquals(options.getTimeFactor(), 1);
 	}
 	
 	@Test
 	public void testTimeFactorMiddle() {
-		String[] args = new String[] { "-ui", "0","-M", "-f","fileName"};
+		String[] args = new String[] { "-ui", "1","-M", "-f","fileName"};
 
 		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
 		assertEquals(options.getFileName(), "fileName");
