@@ -2,10 +2,16 @@ package com.oliver.accesslogsummarizer.beans;
 
 import com.tdunning.math.stats.TDigest;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+
+@Getter
 public class Metric {
 	private String url;
 	private long count;
 	private double totaTime;
+	
+	@Getter(AccessLevel.NONE)
 	private TDigest digest;
 	
 	public Metric(String url, long time, double timefactor) {
@@ -25,18 +31,6 @@ public class Metric {
 		add();
 	}
 
-	public long getCount() {
-		return this.count;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public double getTotaTime() {
-		return totaTime;
-	}
-
 	public double getAvg() {
 		return totaTime / count;
 	}
@@ -45,10 +39,8 @@ public class Metric {
 		count++;
 		digest.add(time);
 		totaTime += time;
-		//avg = totaTime / count;
 	}
 
-	
 	public double get95Percentile() {
 		return this.digest.quantile(0.95);
 	}

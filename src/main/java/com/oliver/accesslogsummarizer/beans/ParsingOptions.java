@@ -1,5 +1,12 @@
 package com.oliver.accesslogsummarizer.beans;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@Getter
+@Setter
 public class ParsingOptions {
 
 	public enum ReportType {DEFAULT, QUICK_SUMMARY}
@@ -9,10 +16,6 @@ public class ParsingOptions {
 	private boolean containsTimeValue = false;
 	private int timeFactor;
 	private ReportType reportType;
-	
-	public ParsingOptions() {
-		
-	}
 	
 	public ParsingOptions(String url, int urlIndex, int timeTakenIndex, int timeFactor, ReportType reportType) {
 		super();
@@ -25,55 +28,6 @@ public class ParsingOptions {
 		this.timeFactor = timeFactor;
 		this.reportType = reportType;
 	}
-
-	public int getUrlIndex() {
-		return urlIndex;
-	}
-
-	public int getTimeTakenIndex() {
-		return timeTakenIndex;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public boolean isContainsTimeValue() {
-		return containsTimeValue;
-	}
-
-	public int getTimeFactor() {
-		return timeFactor;
-	}
-
-	public ReportType getReportType() {
-		return reportType;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public void setUrlIndex(int urlIndex) {
-		this.urlIndex = urlIndex;
-	}
-
-	public void setTimeTakenIndex(int timeTakenIndex) {
-		this.timeTakenIndex = timeTakenIndex;
-	}
-
-	public void setContainsTimeValue(boolean containsTimeValue) {
-		this.containsTimeValue = containsTimeValue;
-	}
-
-	public void setTimeFactor(int timeFactor) {
-		this.timeFactor = timeFactor;
-	}
-
-	public void setReportType(ReportType reportType) {
-		this.reportType = reportType;
-	}
-	
 	
 	
 }
