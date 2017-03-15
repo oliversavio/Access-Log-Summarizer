@@ -27,6 +27,7 @@ public class Metric {
 	}
 
 	public Metric(String url) {
+		digest = TDigest.createDigest(100.0);
 		this.url = url;
 		add();
 	}
