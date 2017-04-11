@@ -14,36 +14,37 @@ public class Metric {
 	@Getter(AccessLevel.NONE)
 	private TDigest digest;
 	
-	public Metric(String url, long time, double timefactor) {
-		digest = TDigest.createDigest(100.0);
-		this.url = url;
-		add(time);
+	public static Metric MetricWithTime(String url, long time) {
+		return new Metric(url, time);
 	}
-
-	public Metric(String url, long time) {
+	
+	private Metric(String url, long time) {
 		digest = TDigest.createDigest(100.0);
 		this.url = url;
-		add(time);
+		addTime(time);
 	}
 
 	public Metric(String url) {
-		digest = TDigest.createDigest(100.0);
 		this.url = url;
 		add();
 	}
 
+	
 	public double getAvg() {
 		return totaTime / count;
 	}
 
-	public void add(long time) {
+	public void addTime(long time) {
 		count++;
 		digest.add(time);
 		totaTime += time;
 	}
 
 	public double get95Percentile() {
-		return this.digest.quantile(0.95);
+		if(this.digest != null)
+			return this.digest.quantile(0.95);
+		else
+			return -1.0;
 	}
 	
 	public void add() {

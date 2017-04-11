@@ -69,13 +69,13 @@ public class SimpleLogParser implements AccessLogParser {
 
 		if (metric == null) {
 			if (options.isContainsTimeValue()) {
-				metric = new Metric(keyUrl, valueTime, options.getTimeFactor());
+				metric = Metric.MetricWithTime(keyUrl, valueTime);
 			} else {
 				metric = new Metric(keyUrl);
 			}
 		} else {
 			if (options.isContainsTimeValue()) {
-				metric.add(valueTime);
+				metric.addTime(valueTime);
 			} else {
 				metric.add();
 			}
