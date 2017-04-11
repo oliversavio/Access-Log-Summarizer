@@ -3,7 +3,7 @@ package com.oliver.accesslogsummarizer;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import com.oliver.accesslogsummarizer.parser.SimpleLogParser;
 
 public class SimpeLogParserTest {
 
-	private Map<String, Metric> map;
+	private List<Metric> lst;
 	private String[] log = new String[] {
 			"#Some"
 			,"#Header"
@@ -30,44 +30,57 @@ public class SimpeLogParserTest {
 	@Test
 	public void testParser() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1, ReportType.DEFAULT));
-		assertEquals(5, map.size());
+		lst = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1, ReportType.DEFAULT));
+		assertEquals(5, lst.size());
 	}
 	
 	@Test
 	public void testIncorrectTimeIndexParseOptions() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null,6, 7, 1, ReportType.DEFAULT));
-		assertEquals(0, map.size());
+		lst = parser.parseLog(Arrays.stream(log), new ParsingOptions(null,6, 7, 1, ReportType.DEFAULT));
+		assertEquals(0, lst.size());
 	}
 	
 	@Test
 	public void testIndexOutOfRange() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 10, 1, ReportType.DEFAULT));
-		assertEquals(0, map.size());
+		lst = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 10, 1, ReportType.DEFAULT));
+		assertEquals(0, lst.size());
 	}
 	
 	@Test
 	public void testParserAvg() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1, ReportType.DEFAULT));
-		assertEquals(3985.0, map.get("/shuttle/countdown/").getAvg(), 0.01);
+		lst = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1, ReportType.DEFAULT));
+		
+		assertEquals(3985.0, getMetricObj("/shuttle/countdown/").getAvg(), 0.01);
 	}
 	
 	@Test
 	public void testParserTotal() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1, ReportType.DEFAULT));
-		assertEquals(4179, map.get("/shuttle/missions/sts-73/sts-73-patch-small.gif").getTotaTime(), 0.01);
+		lst = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1, ReportType.DEFAULT));
+		assertEquals(4179, getMetricObj("/shuttle/missions/sts-73/sts-73-patch-small.gif").getTotaTime(), 0.01);
 	}
 	
 	@Test
 	public void testParserAvgMilli() {
 		AccessLogParser parser =  new SimpleLogParser();
-		map = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1000, ReportType.DEFAULT));
-		assertEquals(3985, map.get("/shuttle/countdown/").getAvg(), 0.01);
+		lst = parser.parseLog(Arrays.stream(log), new ParsingOptions(null, 6, 9, 1000, ReportType.DEFAULT));
+		assertEquals(3985, getMetricObj("/shuttle/countdown/").getAvg(), 0.01);
 	}
+
+	private Metric getMetricObj(String url) {
+		Metric met = null;
+		for(Metric m : lst) {
+			if(m.getUrl().equals(url)) {
+				met = m;
+				break;
+			}
+		}
+		return met;
+	}
+	
 	
 	
 }

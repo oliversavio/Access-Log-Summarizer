@@ -4,7 +4,6 @@ import com.oliver.accesslogsummarizer.beans.ReportContext;
 
 public class ReportProcessor {
 
-	
 	private ReportWriter writer;
 	
 	public ReportProcessor(ReportWriter writer) {

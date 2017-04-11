@@ -2,7 +2,9 @@ package com.oliver.accesslogsummarizer.parser;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +18,7 @@ public class SimpleLogParser implements AccessLogParser {
 	private static Logger logger = LogManager.getLogger(SimpleLogParser.class);
 
 	@Override
-	public Map<String, Metric> parseLog(Stream<String> stream, ParsingOptions options) {
+	public List<Metric> parseLog(Stream<String> stream, ParsingOptions options) {
 
 		if (stream == null) {
 			throw new IllegalArgumentException("Couldn't process stream");
@@ -28,7 +30,17 @@ public class SimpleLogParser implements AccessLogParser {
 		.map(s -> s.split(" "))
 		.forEach(arr -> process(map, arr, options));
 
-		return map;
+		try {
+			stream.close();
+		} catch(Exception ex) {
+			logger.error("Error while closing Stream", ex);
+		}
+		
+		List<Metric> metrics = map.entrySet().stream()
+				.map(mapItem -> mapItem.getValue())
+				.collect(Collectors.toList());
+		
+		return metrics;
 	}
 
 	/**

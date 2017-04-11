@@ -12,7 +12,7 @@ public class ArgumentParserHelperTest {
 
 		String[] args = new String[] { "-f","fileName", "-ui", "1", "-ti", "2" };
 
-		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
+		ParsingOptions options = CommandLineArgumentParser.ParseArguments(args);
 		assertEquals("fileName", options.getFileName());
 		assertEquals(0, options.getUrlIndex());
 		assertEquals(1, options.getTimeTakenIndex());
@@ -23,7 +23,7 @@ public class ArgumentParserHelperTest {
 
 		String[] args = new String[] { "-f","fileName", "-ui", "1" };
 
-		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
+		ParsingOptions options = CommandLineArgumentParser.ParseArguments(args);
 		assertEquals("fileName", options.getFileName());
 		assertEquals(0, options.getUrlIndex());
 		assertFalse(options.isContainsTimeValue());
@@ -34,7 +34,7 @@ public class ArgumentParserHelperTest {
 
 		String[] args = new String[] { "-ui", "1", "-f","fileName" };
 
-		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
+		ParsingOptions options = CommandLineArgumentParser.ParseArguments(args);
 		assertEquals("fileName", options.getFileName());
 		assertEquals(0, options.getUrlIndex());
 		assertFalse(options.isContainsTimeValue());
@@ -43,26 +43,26 @@ public class ArgumentParserHelperTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testParseOptionUrlParseException() {
 		String[] args = new String[] { "fileName", "a" };
-		CommandLineArgumentParser.getInstance().parseArguments(args);
+		CommandLineArgumentParser.ParseArguments(args);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testParseOptionTooFewArgumentException() {
 		String[] args = new String[] { "fileName" };
-		CommandLineArgumentParser.getInstance().parseArguments(args);
+		CommandLineArgumentParser.ParseArguments(args);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testParseOptionTimeParseException() {
 		String[] args = new String[] { "fileName", "0", "q" };
-		CommandLineArgumentParser.getInstance().parseArguments(args);
+		CommandLineArgumentParser.ParseArguments(args);
 	}
 
 	@Test
 	public void testTimeFactorMilli() {
 		String[] args = new String[] { "-ui", "1", "-f","fileName","-M" };
 
-		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
+		ParsingOptions options = CommandLineArgumentParser.ParseArguments(args);
 		assertEquals(options.getFileName(), "fileName");
 		assertEquals(options.getUrlIndex(), 0);
 		assertFalse(options.isContainsTimeValue());
@@ -73,7 +73,7 @@ public class ArgumentParserHelperTest {
 	public void testTimeFactorMicro() {
 		String[] args = new String[] { "-m","-ui", "1", "-f","fileName" };
 
-		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
+		ParsingOptions options = CommandLineArgumentParser.ParseArguments(args);
 		assertEquals(options.getFileName(), "fileName");
 		assertEquals(options.getUrlIndex(), 0);
 		assertFalse(options.isContainsTimeValue());
@@ -84,7 +84,7 @@ public class ArgumentParserHelperTest {
 	public void testTimeFactorDefault() {
 		String[] args = new String[] { "-ui", "1", "-f","fileName"};
 
-		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
+		ParsingOptions options = CommandLineArgumentParser.ParseArguments(args);
 		assertEquals("fileName", options.getFileName());
 		assertEquals(0, options.getUrlIndex());
 		assertFalse(options.isContainsTimeValue());
@@ -95,7 +95,7 @@ public class ArgumentParserHelperTest {
 	public void testTimeFactorMiddle() {
 		String[] args = new String[] { "-ui", "1","-M", "-f","fileName"};
 
-		ParsingOptions options = CommandLineArgumentParser.getInstance().parseArguments(args);
+		ParsingOptions options = CommandLineArgumentParser.ParseArguments(args);
 		assertEquals(options.getFileName(), "fileName");
 		assertEquals(options.getUrlIndex(), 0);
 		assertFalse(options.isContainsTimeValue());

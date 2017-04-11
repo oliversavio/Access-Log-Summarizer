@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.oliver.accesslogsummarizer.beans.Metric;
 import com.oliver.accesslogsummarizer.beans.ReportContext;
@@ -16,11 +14,7 @@ public class QuickSummaryReportWriter extends ReportWriter {
 	public void generateReport(ReportContext context) {
 		
 		StringBuilder sb = new StringBuilder();
-		Map<String, Metric> metriMap = context.getMetricMap();
-		List<Metric> metrics = metriMap.entrySet().stream()
-				//.filter(mapItem -> mapItem.getValue().getCount() > 100)
-				.map(mapItem -> mapItem.getValue())
-				.collect(Collectors.toList());
+		List<Metric> metrics = context.getMetrics();
 		
 		// Sort URLs by descending order of count
 		Comparator<Metric> comparator = Comparator.comparingLong(Metric::getCount);

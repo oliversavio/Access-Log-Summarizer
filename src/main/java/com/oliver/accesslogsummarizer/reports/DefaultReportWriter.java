@@ -3,7 +3,6 @@ package com.oliver.accesslogsummarizer.reports;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.oliver.accesslogsummarizer.beans.Metric;
@@ -21,10 +20,9 @@ public class DefaultReportWriter extends ReportWriter {
 	@Override
 	public void generateReport(ReportContext context) {
 
-		Map<String, Metric> metriMap  = context.getMetricMap();
-		List<Metric> metrics = metriMap.entrySet().stream()
-				.filter(mapItem -> mapItem.getValue().getCount() > 100)
-				.map(mapItem -> mapItem.getValue())
+		List<Metric> metrics = context.getMetrics()
+				.stream()
+				.filter(metric -> metric.getCount() > 100)
 				.collect(Collectors.toList());
 
 		// Sort URLs by descending order of count
