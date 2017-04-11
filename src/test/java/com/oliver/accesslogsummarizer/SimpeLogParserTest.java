@@ -10,6 +10,8 @@ import org.junit.Test;
 import com.oliver.accesslogsummarizer.beans.Metric;
 import com.oliver.accesslogsummarizer.beans.ParsingOptions;
 import com.oliver.accesslogsummarizer.beans.ParsingOptions.ReportType;
+import com.oliver.accesslogsummarizer.parser.AccessLogParser;
+import com.oliver.accesslogsummarizer.parser.SimpleLogParser;
 
 public class SimpeLogParserTest {
 
