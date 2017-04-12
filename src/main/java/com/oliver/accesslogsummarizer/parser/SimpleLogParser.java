@@ -30,12 +30,6 @@ public class SimpleLogParser implements AccessLogParser {
 		.map(s -> s.split(" "))
 		.forEach(arr -> process(map, arr, options));
 
-		try {
-			stream.close();
-		} catch(Exception ex) {
-			logger.error("Error while closing Stream", ex);
-		}
-		
 		List<Metric> metrics = map.entrySet().stream()
 				.map(mapItem -> mapItem.getValue())
 				.collect(Collectors.toList());
