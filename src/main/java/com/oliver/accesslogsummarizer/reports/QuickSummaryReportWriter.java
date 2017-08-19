@@ -7,14 +7,23 @@ import java.util.List;
 
 import com.oliver.accesslogsummarizer.beans.Metric;
 import com.oliver.accesslogsummarizer.beans.ReportContext;
-
+/**
+ * Quick Summary reports displays the Top 20 URLs by Count and Response Time.
+ * Following the 80-20 rule, this should server as a good start to improve overall performance.
+ * 
+ * @author olivermascarenhas
+ *
+ */
 public class QuickSummaryReportWriter extends ReportWriter {
 
 	@Override
-	public void generateReport(ReportContext context) {
+	public Iterable<AccessLogReport> generateReport(ReportContext context) {
 		
-		StringBuilder sb = new StringBuilder();
 		List<Metric> metrics = context.getMetrics();
+		
+		if(metrics == null || metrics.isEmpty()) {
+			throw new IllegalStateException("Metrics List isn't set, cannot proceed with Report Generation");
+		}
 		
 		// Sort URLs by descending order of count
 		Comparator<Metric> comparator = Comparator.comparingLong(Metric::getCount);
@@ -23,28 +32,28 @@ public class QuickSummaryReportWriter extends ReportWriter {
 		int listSize = metrics.size();
 		double topTwenty = Math.round(listSize * 0.2);
 		
-		HtmlTableBuilder table = new HtmlTableBuilder()
-				 .caption("Top URL by Count")
-				 .header(new String[]{"URL","COUNT","AVG","95th %tile"})	
-				 .body(getTop20List(metrics, topTwenty), context.getTimeFactor(), context.isContainsTimeParam());
+		AccessLogReport countReport = new AccessLogReport("Top URL by Count");
 		
-		sb.append(table.toString());
+		getTop20List(metrics, topTwenty)
+		.forEach(metric -> {
+			countReport.addRow(metric, context);
+		});
 		
 		// Sort URLs by descending order of response time
 		Comparator<Metric> percentileComparator = Comparator.comparingDouble(Metric::get95Percentile);
 		Collections.sort(metrics, percentileComparator.reversed());
 		
-		HtmlTableBuilder table2 = new HtmlTableBuilder()
-				 .caption("Top 95 %tile by Response Time")
-				 .header(new String[]{"URL","COUNT","AVG","95th %tile"})	
-				 .body(getTop20List(metrics, topTwenty), context.getTimeFactor(), context.isContainsTimeParam());
+		AccessLogReport responseTimeReport = new AccessLogReport("Top 95 %tile by Response Time");
+		getTop20List(metrics, topTwenty)
+		.forEach(metric -> {
+			responseTimeReport.addRow(metric, context);
+		});
 		
+		List<AccessLogReport> reports = new ArrayList<>(2); 
+		reports.add(countReport);
+		reports.add(responseTimeReport);
 		
-		sb.append(table2.toString());
-		
-		writeToFile(sb.toString(),"QuickSummary.html");
-		
-		
+		return reports;
 	}
 
 	private List<Metric> getTop20List(List<Metric> metrics, double topTwenty) {

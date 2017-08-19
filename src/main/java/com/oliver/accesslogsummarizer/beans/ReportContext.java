@@ -16,5 +16,12 @@ public class ReportContext {
 	private boolean containsTimeParam;
 	private ReportType reportType;
 	private ReportWriter reportWriter;
+	private int countFilter;
+
+	public ReportContext(ParsingOptions options) {
+		this.timeFactor = options.getTimeFactor();
+		this.containsTimeParam = options.isContainsTimeValue();
+		this.reportType = options.getReportType();
+	}
 
 }

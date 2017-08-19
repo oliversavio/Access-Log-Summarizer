@@ -1,5 +1,6 @@
 package com.oliver.accesslogsummarizer.reports;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -18,24 +19,27 @@ import com.oliver.accesslogsummarizer.beans.ReportContext;
 public class DefaultReportWriter extends ReportWriter {
 
 	@Override
-	public void generateReport(ReportContext context) {
+	public Iterable<AccessLogReport> generateReport(ReportContext context) {
 
+		if(context.getMetrics() == null || context.getMetrics().isEmpty()) {
+			throw new IllegalStateException("Metrics List isn't set, cannot proceed with Report Generation");
+		}
+		
 		List<Metric> metrics = context.getMetrics()
 				.stream()
-				.filter(metric -> metric.getCount() > 100)
+				.filter(metric -> metric.getCount() > context.getCountFilter())
 				.collect(Collectors.toList());
 
 		// Sort URLs by descending order of count
 		Comparator<Metric> comparator = Comparator.comparingLong(Metric::getCount);
 		Collections.sort(metrics, comparator.reversed());
 
-		HtmlTableBuilder table = new HtmlTableBuilder()
-								 .caption("Default Report")
-								 .header(new String[]{"URL","COUNT","AVG","95th %tile"})	
-								 .body(metrics, context.getTimeFactor(), context.isContainsTimeParam());
+		AccessLogReport report = new AccessLogReport("Default Report");
+		metrics.forEach(metric -> report.addRow(metric, context));
 		
-		String report = table.toString();
-		writeToFile(report,"DefaultReport1.html");
+		List<AccessLogReport> result = new ArrayList<>(1);
+		result.add(report);
+		return result;
 	}
 
 }
