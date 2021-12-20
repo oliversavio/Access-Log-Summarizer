@@ -23,7 +23,7 @@ public class Main {
 				.processAccessLog(options)
 				.orElseThrow(() -> new IllegalStateException("Processing failed"));
 
-		ReportHelper.MakeReport(metrics, options);
+		ReportHelper.MakeHtmlReport(metrics, options);
 
 	}
 

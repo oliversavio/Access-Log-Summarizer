@@ -1,19 +1,20 @@
 package com.oliver.accesslogsummarizer.reports;
 
-import java.text.DecimalFormat;
-import java.util.List;
+import java.util.Map;
 
-import com.oliver.accesslogsummarizer.beans.Metric;
+import com.oliver.accesslogsummarizer.reports.AccessLogReport.ColumnName;
+import com.oliver.accesslogsummarizer.reports.AccessLogReport.ReportValues;
 
 public class HtmlTableBuilder {
 
 	private static final String TABLE_HEADER = "<table border='1'><thead>";
 	private static final String TABLE_FOOTER = "</tbody></table><br /><br />";
-	private static final DecimalFormat decimalFormat = new DecimalFormat("0.000");
 	private String caption;
 	private String headerFields;
 	private String body;
 	private String footer = TABLE_FOOTER;
+	
+	
 	
 	public HtmlTableBuilder() {
 		
@@ -24,12 +25,13 @@ public class HtmlTableBuilder {
 			return this;
 	}
 	
-	public  HtmlTableBuilder header(String[] headerFields) {
+	public  HtmlTableBuilder header(Map<String, String> colNames) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("<tr>");
-			for(int i = 0 ; i < headerFields.length ; i++) {
-				sb.append("<th>").append(headerFields[i]).append("</th>");
-			}
+				sb.append("<th>").append(colNames.get(ColumnName.URL)).append("</th>");
+				sb.append("<th>").append(colNames.get(ColumnName.COUNT)).append("</th>");
+				sb.append("<th>").append(colNames.get(ColumnName.AVG)).append("</th>");
+				sb.append("<th>").append(colNames.get(ColumnName.PERCENTILE)).append("</th>");
 			sb.append("</tr>");
 		
 			this.headerFields = sb.toString();
@@ -37,9 +39,9 @@ public class HtmlTableBuilder {
 			return this;
 	}
 	
-	public HtmlTableBuilder body(List<Metric> metrics, int timeFactor, boolean containsTimeParam) {
+	public HtmlTableBuilder body(Iterable<ReportValues> rows) {
 		StringBuilder sb = new StringBuilder();
-		metrics.forEach(metric -> {
+		rows.forEach(metric -> {
 			sb.append("<tr>");
 			sb.append("<td>");
 			sb.append(metric.getUrl());
@@ -48,19 +50,11 @@ public class HtmlTableBuilder {
 			sb.append(metric.getCount());
 			sb.append("</td>");
 			sb.append("<td>");
-			if(containsTimeParam) {
-				sb.append(decimalFormat.format((double) metric.getAvg()/timeFactor));
-				sb.append("</td>");
-				sb.append("<td>");
-				sb.append(decimalFormat.format((double) metric.get95Percentile()/timeFactor));
-				sb.append("</td>");
-			} else {
-				sb.append("NA");
-				sb.append("</td>");
-				sb.append("<td>");
-				sb.append("NA");
-				sb.append("</td>");
-			}
+			sb.append(metric.getAverage());
+			sb.append("</td>");
+			sb.append("<td>");
+			sb.append(metric.getPercentile());
+			sb.append("</td>");
 			sb.append("</tr>");
 		});
 		
